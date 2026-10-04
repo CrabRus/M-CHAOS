@@ -87,6 +87,15 @@ Injekcia sieťových chýb je realizovaná na úrovni kontajnerov pomocou princ�
 \item Kompletné prerušenie sieťového spojenia (Network Partitioning / Split-Brain).
 \end{enumerate}
 
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.8\textwidth]{architektura-crop.pdf}
+\caption{Architektúra testovacieho stojanu a injekcia sieťových chýb.}
+\label{f:architektura}
+\end{figure}
+
+Ako môžeme vidieť na obrázku~\ref{f:architektura}, všetka komunikácia medzi generátorom a spracovateľom prebieha cez prostredníka, ktorý simuluje sieťovú degradáciu.
+
 \section{Porovnanie komunikačných technológií} \label{s: protokoly}
 
 V rámci experimentov sa porovnávajú štyri kľúčové komunikačné prístupy rozdelené do dvoch kategórií:
