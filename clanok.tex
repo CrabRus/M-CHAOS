@@ -1,0 +1,54 @@
+% Metódy inžinierskej práce
+
+\documentclass[10pt,twoside,slovak,a4paper]{article}
+
+\usepackage[slovak]{babel}
+\usepackage[IL2]{fontenc} 
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{url} 
+\usepackage{hyperref} 
+\usepackage{cite}
+
+\pagestyle{headings}
+
+\title{Porovnávacia analýza výkonnosti a odolnosti vzorov komunikácie mikroservisov (gRPC, REST, NATS, Kafka) pri sieťových degradáciách\thanks{Semestrálny projekt v predmete Metódy inžinierskej práce, ak. rok 2026/27, vedenie: Meno Priezvisko}}
+
+\author{
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        Ruslan Honcharov\\[2pt]
+        {\small \texttt{xhoncharov@stuba.sk}}
+    \end{minipage}
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        Mykhailo Hoi\\[2pt]
+        {\small \texttt{xhoi@is.stuba.sk}}
+    \end{minipage}
+    \\[12pt]
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        Hnatiuk Volodymyr\\[2pt]
+        {\small \texttt{xhnatiuk@stuba.sk}}
+    \end{minipage}
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        Andrii Gladushka\\[2pt]
+        {\small \texttt{xgladushka@stuba.sk}}
+    \end{minipage}
+    \\[14pt]
+    {\small Slovenská technická univerzita v Bratislave}\\
+    {\small Fakulta informatiky a informačných technológií}
+}
+
+\date{\small 4. október 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Tento projekt sa zaoberá empirickým výskumom a porovnávacou analýzou výkonnosti a spoľahlivosti rôznych komunikačných paradigmát v mikroservisnej architektúre (HTTP/REST, gRPC, NATS JetStream, Apache Kafka). Hlavným cieľom je preskúmať správanie systému pri simulovaných sieťových poruchách (zvýšená latencia, strata paketov, sieťový split) a vyhodnotiť efektivitu vzorov odolnosti (Circuit Breaker, Retries s exponenciálnym odstupom, Rate Limiting). Výstupom práce je testovací stojan pre Chaos Engineering a matica odporúčaní pre návrh odolných distribuovaných systémov s ohľadom na metriky priepustnosti (RPS), latencie (P95/P99) a chybovosti.
+\end{abstract}
+
+\end{document}
