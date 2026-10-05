@@ -80,6 +80,16 @@ Pre účely výskumu bol navrhnutý a implementovaný izolovaný testovací stoj
 \item \textbf{Service B (Spracovateľ):} Prijíma požiadavky, vykonáva ľahkú biznis logiku a simuluje zápis do databázy.
 \end{itemize}
 
+\begin{figure}[htbp]
+\centering
+% Замените 'diagram-docker-crop.pdf' на актуальное имя файла от Андрея
+\includegraphics[width=0.9\textwidth]{Diagrams/PDF/diagram-docker-crop.pdf} 
+\caption{Infraštruktúra testovacieho stojanu v prostredí Docker Compose.}
+\label{f:docker}
+\end{figure}
+
+Ako ilustruje obrázok~\ref{f:docker}, všetky komponenty vrátane generátora záťaže, proxy servera a nástrojov na zber metrík sú izolované vo vlastných kontajneroch a komunikujú cez zdieľanú virtuálnu sieť.
+
 Injekcia sieťových chýb je realizovaná na úrovni kontajnerov pomocou princípov Chaos Engineeringu~\cite{Rosenthal2020, Basiri2016}. Tento prístup umožňuje dynamicky simulovať:
 \begin{enumerate}
 \item Umelé zvýšenie latencie (Network Latency Jump).
@@ -111,6 +121,16 @@ V rámci experimentov sa porovnávajú štyri kľúčové komunikačné prístup
 \item \textbf{Apache Kafka:} Distribuovaná platforma pre spracovanie udalostí s vysokou priepustnosťou a trvalým ukladaním správ na disk.
 \item \textbf{NATS JetStream:} Ľahkovedný a extrémne rýchly messaging systém zameraný na nízku latenciu a jednoduchú správu.
 \end{itemize}
+\begin{figure}[htbp]
+\centering
+% Замените 'diagram-kafka-crop.pdf' на актуальное имя файла
+\includegraphics[width=0.85\textwidth]{Diagrams/PDF/diagram-kafka-crop.pdf}
+\caption{Asynchrónny model spracovania udalostí pomocou Apache Kafka.}
+\label{f:kafka}
+\end{figure}
+
+Model asynchrónneho spracovania (obrázok~\ref{f:kafka}) zabezpečuje vysokú priepustnosť prerozdeľovaním záťaže medzi viaceré inštancie konzumentov v rámci jednej skupiny (Consumer Group) pomocou partícií.
+
 
 \section{Vyhodnotenie vzorov odolnosti (Resilience Patterns)} \label{s: vzory}
 
@@ -124,6 +144,15 @@ Monitoruje chybovosť cieľového servisu. Ak podiel chýb prekročí definovan�
 
 \paragraph{Rate Limiting.}
 Obmedzuje maximálny počet spracovaných požiadaviek za sekundu (RPS) na vstupe do servisu, čím chráni systém pred preťažením.
+\begin{figure}[htbp]
+\centering
+% Замените 'diagram-circuit-breaker-crop.pdf' на актуальное имя файла от Вовы
+\includegraphics[width=0.75\textwidth]{Diagrams/PDF/diagram-circuit-breaker-crop.pdf}
+\caption{Stavový model návrhového vzoru Circuit Breaker.}
+\label{f:circuit_breaker}
+\end{figure}
+
+Prechody medzi jednotlivými stavmi (Closed, Open, Half-Open), ktoré zabraňujú preťaženiu zlyhávajúceho servisu, sú detailne znázornené na obrázku~\ref{f:circuit_breaker}.
 
 \subsection{Merané metriky} \label{s: metriky}
 Sledovanie výkonnosti prebieha pomocou Prometheus a vizualizácie v Grafana. Hodnotia sa nasledujúce parametre:
@@ -133,6 +162,16 @@ Sledovanie výkonnosti prebieha pomocou Prometheus a vizualizácie v Grafana. Ho
 \item \textbf{Miera chybovosti (Error Rate):} Percentuálny podiel zlyhaných transakcií.
 \item \textbf{Čas obnovy (Recovery Time):} Čas potrebný na návrat do normálneho stavu po odstránení sieťovej poruchy.
 \end{itemize}
+
+\begin{figure}[htbp]
+\centering
+% Замените 'diagram-chaos-crop.pdf' на актуальное имя файла от Михаила
+\includegraphics[width=0.95\textwidth]{Diagrams/PDF/diagram-chaos-crop.pdf}
+\caption{Životný cyklus a metodika vykonávania Chaos experimentu.}
+\label{f:chaos_lifecycle}
+\end{figure}
+
+Metodologický postup od zberu referenčných metrík, cez injekciu chaosu, až po zotavenie systému (Recovery) je zachytený na obrázku~\ref{f:chaos_lifecycle}. Pre objektívne vyhodnotenie sa zameriavame na nasledujúce parametre:
 
 \section{Záver} \label{s: zaver}
 

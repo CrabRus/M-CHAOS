@@ -1,0 +1,10 @@
+<diagram program="umletino" version="15.1"><zoom_level>8</zoom_level><help_text></help_text><element><id>UMLClass</id><coordinates><x>234</x><y>235</y><w>104</w><h>80</h></coordinates><panel_attributes>Apache Kafka
+--
+Topic: events_tx
+--
+Partition 0
+Partition 1
+Partition 2</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>34</x><y>259</y><w>104</w><h>32</h></coordinates><panel_attributes>Service A (Producer)</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>434</x><y>235</y><w>224</w><h>32</h></coordinates><panel_attributes>Service B (Inst. 1)  (Consumer Group)</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>434</x><y>283</y><w>224</w><h>32</h></coordinates><panel_attributes>Service B (Inst. 2)  (Consumer Group)</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>130</x><y>259</y><w>120</w><h>32</h></coordinates><panel_attributes>lt=&lt;&lt;-
+Publish</panel_attributes><additional_attributes>130;20;10;20</additional_attributes></element><element><id>Relation</id><coordinates><x>330</x><y>235</y><w>120</w><h>32</h></coordinates><panel_attributes>lt=&lt;&lt;-
+Poll</panel_attributes><additional_attributes>130;20;10;20</additional_attributes></element><element><id>Relation</id><coordinates><x>330</x><y>283</y><w>120</w><h>32</h></coordinates><panel_attributes>lt=&lt;&lt;-
+Poll</panel_attributes><additional_attributes>130;20;10;20</additional_attributes></element></diagram>
