@@ -1,0 +1,20 @@
+<diagram program="umletino" version="15.1"><zoom_level>10</zoom_level><help_text>Docker Compose (docker-network)
+</help_text><element><id>UMLGeneric</id><coordinates><x>110</x><y>60</y><w>140</w><h>80</h></coordinates><panel_attributes>symbol=component
+Service A
+(Load Gen)</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLGeneric</id><coordinates><x>340</x><y>60</y><w>140</w><h>80</h></coordinates><panel_attributes>bg=#ffcccc
+symbol=component
+Toxiproxy</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLGeneric</id><coordinates><x>560</x><y>60</y><w>140</w><h>80</h></coordinates><panel_attributes>symbol=component
+Service B
+(Spracovateľ)</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLGeneric</id><coordinates><x>300</x><y>200</y><w>220</w><h>80</h></coordinates><panel_attributes>symbol=component
+Apache Kafka / NATS JetStream
+(Message Broker)</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLGeneric</id><coordinates><x>340</x><y>350</y><w>140</w><h>80</h></coordinates><panel_attributes>bg=#ccffff
+symbol=component
+Prometheus
+(Metrics scraping)</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLGeneric</id><coordinates><x>340</x><y>500</y><w>140</w><h>80</h></coordinates><panel_attributes>bg=#ccffff
+symbol=component
+Grafana
+(Dashboard)</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>240</x><y>90</y><w>120</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>100;10;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>470</x><y>90</y><w>110</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>90;10;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>180</x><y>140</y><w>130</w><h>80</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>110;60;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>520</x><y>140</y><w>130</w><h>80</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>110;10;10;60</additional_attributes></element><element><id>Relation</id><coordinates><x>150</x><y>140</y><w>200</w><h>260</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;.
+ scrape</panel_attributes><additional_attributes>10;10;180;240</additional_attributes></element><element><id>Relation</id><coordinates><x>480</x><y>140</y><w>200</w><h>270</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;.
+scrape</panel_attributes><additional_attributes>180;10;10;250</additional_attributes></element><element><id>Relation</id><coordinates><x>400</x><y>280</y><w>70</w><h>80</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;.
+scrape</panel_attributes><additional_attributes>10;10;10;60</additional_attributes></element><element><id>Relation</id><coordinates><x>400</x><y>430</y><w>60</w><h>80</h></coordinates><panel_attributes>lt=&lt;&lt;-
+query</panel_attributes><additional_attributes>10;10;10;60</additional_attributes></element><element><id>UMLDeployment</id><coordinates><x>10</x><y>0</y><w>810</w><h>600</h></coordinates><panel_attributes>Docker Compose (docker-network)</panel_attributes><additional_attributes></additional_attributes></element></diagram>
