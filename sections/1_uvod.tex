@@ -1,0 +1,10 @@
+\section{Úvod}
+
+V modernom vývoji softvéru sa architektúra mikroservisov stala štandardom pre budovanie škálovateľných a flexibilných systémov~\cite{Newman2021}. Na rozdiel od monolitických aplikácií, kde komunikácia prebieha v rámci jedného pamäťového priestoru, mikroservisy intenzívne využívajú počítačovú sieť. Sieť však z hľadiska distribuovaných systémov neponúka absolútnu spoľabilivosť — bežne dochádza ku kolísaniu latencie, strate paketov alebo dočasným výpadkom uzlov.
+
+Pokiaľ nie je komunikačná vrstva správne navrhnutá, lokálna sieťová porucha môže viesť ku kaskádovému zlyhaniu celého systému. Táto práca analyzuje správanie rôznych transportných protokolov a spracovateľov správ (message brokers) v podmienkach sieťovej degradácie a vyhodnocuje vplyv architektúrnych vzorov odolnosti (Resilience Patterns) na zachovanie dostupnosti aplikácie.
+
+Základný problém a motivácia výskumu sú detailnejšie popísané v časti~\ref{s: problem}.
+Navrhnutá architektúra testovacieho stojanu a metodika Chaos Engineeringu sú predstavené v časti~\ref{s: architektura}.
+Porovnanie komunikačných protokolov a vzorov odolnosti prinášajú časti~\ref{s: protokoly} a~\ref{s: vzory}.
+Záverečné zhrnutie a inžinierske odporúčania obsahuje časť~\ref{s: zaver}.

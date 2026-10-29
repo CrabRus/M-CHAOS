@@ -1,0 +1,7 @@
+\section{Definícia problému a cieľ práce} \label{s: problem}
+
+V reálnej prevádzke musia distribuované systémy spĺňať prísne požiadavky na úroveň poskytovaných služieb (SLA). Hlavným problémom pri návrhu komunikácie je kompromis (trade-off) medzi rýchlosťou prenosu dát a garanciou ich doručenia.
+
+Tradičné synchrónne prístupy založené na protokole HTTP/REST a formáte JSON trpia vysokou réžiou dát a blokovaním vlákien. Moderné alternatívy ako gRPC využívajú binárnu serializáciu (Protocol Buffers) a multiplexovanie cez HTTP/2, čo výrazne znižuje latenciu~\cite{Indrasiri2020}. Na druhej strane, asynchrónna komunikácia pomocou brokerov správ (Apache Kafka, NATS JetStream) oddeľuje odosielateľa od príjemcu, čím zvyšuje odolnosť voči dočasným výpadkom.
+
+Cieľom tohto projektu je kvantifikovať správanie týchto technológií pri umelo vyvolanom sieťovom chaose a posúdiť ich vhodnosť pre kritické distribuované aplikácie.
