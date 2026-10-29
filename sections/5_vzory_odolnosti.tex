@@ -1,0 +1,21 @@
+\section{Vyhodnotenie vzorov odolnosti (Resilience Patterns)} \label{s: vzory}
+
+Na zamedzenie kaskádových zlyhaní pri sieťových degradáciách boli do komunikácie integrované tri kľúčové vzory~\cite{Richardson2018}:
+
+\paragraph{Retries s exponenciálnym odstupom (Exponential Backoff).}
+Zabezpečuje opakované odoslanie zlyhanej požiadavky s postupne sa zvyšujúcim časovým intervalom, čím sa predchádza zahusteniu siete.
+
+\paragraph{Circuit Breaker.}
+Monitoruje chybovosť cieľového servisu. Ak podiel chýb prekročí definovaný prah, preruší odosielanie požiadaviek, čím dáva zlyhávajúcemu servisu čas na zotavenie~\cite{Montesi2016}.
+
+\paragraph{Rate Limiting.}
+Obmedzuje maximálny počet spracovaných požiadaviek za sekundu (RPS) na vstupe do servisu, čím chráni systém pred preťažením.
+
+\subsection{Merané metriky} \label{s: metriky}
+Sledovanie výkonnosti prebieha pomocou Prometheus a vizualizácie v Grafana. Hodnotia sa nasledujúce parametre:
+\begin{itemize}
+\item \textbf{Priepustnosť (Throughput):} Počet úspešne spracovaných požiadaviek za sekundu (RPS).
+\item \textbf{Latencia (P95 / P99 Latency):} Čas odozvy pre najpomalších $5\,\%$ a $1\,\%$ požiadaviek~\cite{Dean2013}.
+\item \textbf{Miera chybovosti (Error Rate):} Percentuálny podiel zlyhaných transakcií.
+\item \textbf{Čas obnovy (Recovery Time):} Čas potrebný na návrat do normálneho stavu po odstránení sieťovej poruchy.
+\end{itemize}
