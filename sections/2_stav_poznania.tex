@@ -1,0 +1,12 @@
+\section{Súčasný stav poznania} \label{s: stav_poznania}
+
+Problematika komunikácie v distribuovaných systémoch a mikroservisnej architektúre je extenzívne skúmaná v odbornej literatúre. Súčasný výskum sa zameriava primárne na dva smery: optimalizáciu komunikačných protokolov a zvyšovanie celkovej odolnosti systémov voči zlyhaniam.
+
+V oblasti synchrónnej komunikácie Newman~\cite{Newman2021} definuje obmedzenia tradičného HTTP/REST prístupu, najmä v kontexte blokovania vlákien a vysokej réžie pri spracovaní textového formátu JSON. Ako odpoveď na tieto limity Indrasiri a Kuruppu~\cite{Indrasiri2020} podrobne analyzujú framework gRPC, ktorý vďaka protokolu HTTP/2 a binárnej serializácii Protobuf signifikantne znižuje latenciu. Väčšina existujúcich porovnaní týchto dvoch technológií sa však realizuje v ideálnych sieťových podmienkach, čo nereflektuje reálne produkčné prostredie.
+
+Pre asynchrónne spracovanie udalostí Kleppmann~\cite{Kleppmann2017} popisuje robustnosť platformy Apache Kafka, ktorá využíva koncept ,,append-only log`` pre perzistenciu správ. Hoci je Kafka priemyselným štandardom, novšie štúdie a benchmarky poukazujú na jej vysokú komplexnosť a nároky na zdroje, čo otvára priestor pre ľahkovedné alternatívy ako NATS JetStream. 
+
+Z hľadiska odolnosti systémov (Resilience) zaviedli inžinieri zo spoločnosti Netflix koncept Chaos Engineeringu~\cite{Basiri2016}. Tento prístup je založený na proaktívnom vnášaní chýb do produkčného prostredia s cieľom odhaliť skryté zraniteľnosti. Rosenthal~\cite{Rosenthal2020} ďalej rozvíja túto metodiku pre aplikáciu v lokálnych testovacích prostrediach. 
+
+\paragraph{Identifikácia výskumnej medzery.} 
+Zatiaľ čo jednotlivé technológie (gRPC, Kafka) a vzory odolnosti (Circuit Breaker~\cite{Montesi2016}) sú v literatúre dobre zdokumentované izolovane, chýba ucelená empirická štúdia, ktorá by \textbf{priamo porovnávala} degradáciu ich výkonu pri riadenom sieťovom chaose. Tento projekt vypĺňa danú medzeru implementáciou jednotného testovacieho stojanu, ktorý aplikuje princípy Chaos Engineeringu na rôzne transportné protokoly súčasne.
