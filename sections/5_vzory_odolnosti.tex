@@ -1,21 +1,32 @@
 \section{Vyhodnotenie vzorov odolnosti (Resilience Patterns)} \label{s: vzory}
 
-Na zamedzenie kaskádových zlyhaní pri sieťových degradáciách boli do komunikácie integrované tri kľúčové vzory~\cite{Richardson2018}:
+V prostredí distribuovaných systémov nie je otázkou, \textit{či} k sieťovej chybe dôjde, ale \textit{kedy} k nej dôjde. Pri priamom synchrónnom volaní medzi mikroservismi (napríklad cez REST alebo gRPC) môže lokálny výpadok jedného servisu rýchlo eskalovať do kaskádového zlyhania celého systému, nakoľko volajúce vlákna zostávajú zablokované pri čakaní na odpoveď.
 
-\paragraph{Retries s exponenciálnym odstupom (Exponential Backoff).}
-Zabezpečuje opakované odoslanie zlyhanej požiadavky s postupne sa zvyšujúcim časovým intervalom, čím sa predchádza zahusteniu siete.
+Na mitigáciu tohto problému a zamedzenie kaskádových zlyhaní pri sieťových degradáciách boli do komunikácie v rámci nášho testovacieho stojanu integrované tri kľúčové vzory podľa Richardsona~\cite{Richardson2018}:
 
-\paragraph{Circuit Breaker.}
-Monitoruje chybovosť cieľového servisu. Ak podiel chýb prekročí definovaný prah, preruší odosielanie požiadaviek, čím dáva zlyhávajúcemu servisu čas na zotavenie~\cite{Montesi2016}.
+\subsection{Retries s exponenciálnym odstupom (Exponential Backoff)}
+Základný mechanizmus opakovania požiadavky (Retry) je účinný pri prechodných (transient) chybách, akými sú krátkodobé straty paketov. Ak sa však cieľový servis ocitne pod extrémnou záťažou, okamžité a agresívne opakovanie požiadaviek zo strany stoviek klientov by viedlo k javu známym ako \textit{Retry Storm} (búrka opakovaní), čo by servis definitívne zhodilo.
 
-\paragraph{Rate Limiting.}
-Obmedzuje maximálny počet spracovaných požiadaviek za sekundu (RPS) na vstupe do servisu, čím chráni systém pred preťažením.
+Z tohto dôvodu sa implementuje stratégia exponenciálneho odstupu (Exponential Backoff). Znamená to, že časový interval medzi opakovanými pokusmi rastie exponenciálne. Na zabránenie synchronizácie opakovaných požiadaviek viacerými klientmi v rovnakom čase sa do výpočtu pridáva faktor náhodnosti (Jitter). Matematicky možno tento model zapísať ako:
+$$ T_{wait} = \min(T_{max}, T_{base} \cdot 2^c + \text{random}(0, J)) $$
+kde $T_{base}$ je počiatočný interval, $c$ je počet neúspešných pokusov, $T_{max}$ je maximálny povolený čas čakania a $J$ je rozptyl náhodnosti. Tento prístup poskytuje preťaženému servisu priestor na zotavenie.
 
-\subsection{Merané metriky} \label{s: metriky}
-Sledovanie výkonnosti prebieha pomocou Prometheus a vizualizácie v Grafana. Hodnotia sa nasledujúce parametre:
+\subsection{Circuit Breaker (Istič)}
+Zatiaľ čo Retry pomáha pri krátkodobých chybách, Circuit Breaker chráni systém v prípadoch, kedy je cieľový servis dlhodobo nedostupný alebo úplne spadol. Tento vzor, detailne popísaný Montesim a Weberovou~\cite{Montesi2016}, funguje na podobnom princípe ako elektrický istič v domácnosti a operuje v troch stavoch:
 \begin{itemize}
-\item \textbf{Priepustnosť (Throughput):} Počet úspešne spracovaných požiadaviek za sekundu (RPS).
-\item \textbf{Latencia (P95 / P99 Latency):} Čas odozvy pre najpomalších $5\,\%$ a $1\,\%$ požiadaviek~\cite{Dean2013}.
-\item \textbf{Miera chybovosti (Error Rate):} Percentuálny podiel zlyhaných transakcií.
-\item \textbf{Čas obnovy (Recovery Time):} Čas potrebný na návrat do normálneho stavu po odstránení sieťovej poruchy.
+    \item \textbf{Closed (Zatvorený):} Normálny stav. Požiadavky plynulo prechádzajú k cieľovému servisu. Istič interne počíta pomer úspešných a neúspešných volaní.
+    \item \textbf{Open (Otvorený):} Ak percento zlyhaní prekročí definovaný prah (napríklad $50\,\%$ v rámci časového okna), istič sa "vypne". Všetky nasledujúce požiadavky okamžite zlyhávajú na strane klienta (Fail Fast) s chybovou hláškou bez toho, aby zbytočne zaťažovali sieť.
+    \item \textbf{Half-Open (Polo-otvorený):} Po uplynutí definovaného časového intervalu (timeout) prejde istič do testovacieho režimu. Prepustí obmedzený počet požiadaviek. Ak sú úspešné, vráti sa do stavu \textit{Closed}. Ak zlyhajú, okamžite prechádza späť do stavu \textit{Open}.
+\end{itemize}
+
+\subsection{Rate Limiting (Obmedzovanie toku)}
+Posledným prvkom ochrany je Rate Limiting, aplikovaný na vstupe do prijímajúceho servisu. Tento mechanizmus chráni servis pred preťažením tým, že striktne obmedzuje maximálny počet spracovaných požiadaviek za sekundu (RPS - Requests Per Second). Priemyselným štandardom pre implementáciu je algoritmus Token Bucket alebo Leaky Bucket. Ak je limit prekročený, servis odmietne požiadavku chybovým kódom (typicky HTTP 429 Too Many Requests), čo v správne navrhnutej architektúre následne spustí mechanizmy Retry na strane klienta.
+
+\subsection{Merané metriky pri Chaos simuláciách} \label{s: metriky}
+Sledovanie výkonnosti pri aplikácii vyššie uvedených vzorov prebieha v reálnom čase pomocou časových radov v databáze Prometheus, s následnou vizualizáciou v nástroji Grafana. V prostredí sieťových degradácií (zvýšená latencia, strata paketov) sa vyhodnocujú nasledujúce parametre:
+\begin{itemize}
+\item \textbf{Priepustnosť (Throughput):} Reálny počet úspešne dokončených transakcií za sekundu (RPS) pri rôznych úrovniach záťaže.
+\item \textbf{Latencia (P95 a P99):} Čas odozvy pre najpomalších $5\,\%$ a $1\,\%$ požiadaviek. Sledovanie \textit{tail latency}~\cite{Dean2013} je kľúčové, pretože priemerná latencia nedokáže odhaliť občasné výrazné spomalenia spôsobené opakovanými pokusmi (Retries) alebo hromadením správ v radoch Kafky.
+\item \textbf{Miera chybovosti (Error Rate):} Percentuálny podiel transakcií, ktoré zlyhali aj napriek ochranným mechanizmom (napr. keď vyprší maximálny počet opakovaní alebo keď je Circuit Breaker v stave Open).
+\item \textbf{Čas obnovy (Time to Recovery):} Čas, ktorý systém potrebuje na návrat do stabilného prevádzkového stavu s optimálnou latenciou po tom, ako je simulovaná sieťová porucha ukončená.
 \end{itemize}
