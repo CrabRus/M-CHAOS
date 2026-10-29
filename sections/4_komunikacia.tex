@@ -1,0 +1,16 @@
+% communication.tex
+\subsection{Synchrónna komunikácia} \label{s: synchro}
+Synchrónna komunikácia predstavuje model, v ktorom klient odošle požiadavku a blokuje svoje vlákno, kým nedostane odpoveď od servera. V našom výskume porovnávame dva dominantné prístupy:
+
+\begin{itemize}
+\item \textbf{HTTP/REST (JSON):} Tento architektonický štýl je de facto štandardom pre webové API. Využíva textový formát JSON, ktorý je ľahko čitateľný pre človeka. Jeho hlavnou nevýhodou v prostredí mikroservisov je veľká réžia na serializáciu a deserializáciu dát, ako aj väčšia veľkosť prenášaných správ. Tradičný REST zväčša beží nad protokolom HTTP/1.1, čo obmedzuje možnosti paralelného spracovania požiadaviek.
+\item \textbf{gRPC (Protobuf):} Vyvinutý spoločnosťou Google, gRPC je moderný framework pre vzdialené volanie procedúr (RPC). Namiesto textu využíva binárny formát Protocol Buffers (Protobuf) a natívne beží nad protokolom HTTP/2. Vďaka binárnej povahe je serializácia extrémne rýchla. HTTP/2 navyše umožňuje multiplexovanie (odosielanie viacerých požiadaviek cez jedno TCP spojenie súčasne), čo výrazne znižuje latenciu pri sietových degradáciách a vysokej záťaži~\cite{Indrasiri2020}.
+\end{itemize}
+
+\subsection{Asynchrónna komunikácia} \label{s: asynchro}
+Pri asynchrónnom modeli klient odošle správu sprostredkovateľovi (message broker) a nečaká na okamžitú odpoveď. Tento prístup rapídne zvyšuje odolnosť systému – ak cieľový servis spadne, správa sa nestratí, ale zostane bezpečne uložená u brokera, kým sa servis neobnoví.
+
+\begin{itemize}
+\item \textbf{Apache Kafka:} Mohutná a výkonná distribuovaná platforma založená na princípe logu (append-only log). Kafka poskytuje extrémnu priepustnosť a trvalé uloženie dát (persistence) na disku. Je ideálna pre rozsiahle systémy a odolnosť voči ,,split-brain`` scenárom, avšak za cenu vysokej komplexnosti nasadenia a väčšej spotreby systémových zdrojov.
+\item \textbf{NATS JetStream:} Na rozdiel od Kafky je NATS JetStream výrazne ľahkovednejší a jednoduchší na prevádzku. Bol navrhnutý s dôrazom na maximálnu rýchlosť a nízku latenciu. JetStream pridáva do základného NATS protokolu perzistenciu a garanciu doručenia správ. V kontexte nášho výskumu ponúka výbornú alternatívu ku Kafke tam, kde je prioritou rýchla odozva a rýchle zotavenie pri sieťových výpadkoch, bez zbytočnej architektonickej záťaže.
+\end{itemize}
